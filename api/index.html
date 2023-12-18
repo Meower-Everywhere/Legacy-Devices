@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Meower</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <style id="style">
+body {
+  color: black;
+  background-color: white;
+}
+  </style>
+  <script>document.getElementById("style").dlt = "light"</script>
+</head>
+<body>
+  <h2>Meower</h2>
+  <small id='smalver'>If you're seeing this message, your device might not support/allow JavaScript!</small><br>
+  <button onclick='document.getElementById("test").innerHTML = "<small></small>"'>Clear</button> <button onclick='checkqueue()'>Fetch</button> <button onclick='toggletheme()'>Change Theme</button><br><br>
+  <input type='text' id='post'> <button onclick='post()'>Post!</button>
+  <p id='test'><small></small></p>
+  <script type="text/javascript">
+const meowerapi = "https://api.meower.org/"
+const vers = "v1.0.0-api"
+var uname = "tester"
+document.getElementById("smalver").innerHTML = vers + "<br>No fetched incoming"
+
+function post() { // NOTE: use webhooks here
+  var xhttp = new XMLHttpRequest();
+  var compit = document.getElementById("post").value
+  xhttp.open("POST", "https://webhooks.meower.org/post/home");
+  xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  xhttp.send(JSON.stringify({"post": compit, "username": uname}));
+  document.getElementById("post").value = ""
+}
+
+function checkqueue() { // NOTE: replace with api home fetch
+  qwer = new Date();
+  document.getElementById("smalver").innerHTML = vers + "<br>Last fetch at " + qwer.toLocaleString()
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+       console.log(xhttp.responseText)
+       // alert(xhttp.responseText)
+       // var q = JSON.parse(xhttp.responseText)
+       var q = xhttp.responseText
+       var qu = JSON.parse(q)
+       var lp = qu["autoget"].length
+       document.getElementById("test").innerHTML = ""
+       while (lp != -1) {
+         qa = qu["autoget"][lp]
+         console.log(qa)
+         try {
+           const para = document.createElement("p");
+           const values = document.createTextNode(qa.u + ": " + qa.p);
+           para.appendChild(values);
+           const par = document.createElement("br");
+           para.appendChild(par);
+           document.getElementById("test").insertBefore(para, document.getElementById("test").firstChild);
+         } catch (excepErr) {
+           console.log('Something went wrong parsing: ' + excepErr)
+         }
+         lp -= 1
+       }
+    }
+  };
+  xhttp.open("GET", meowerapi + "home?autoget");
+  xhttp.send();
+}
+
+function toggletheme() {
+  try {
+    if (document.getElementById("style").dlt == "light") {
+      document.getElementById("style").innerText = "body {color: white; background-color: black;}"
+      document.getElementById("style").dlt = "dark"
+    } else {
+      document.getElementById("style").innerText = "body {color: black; background-color: white;}"
+      document.getElementById("style").dlt = "light"
+    }
+  } catch (excepErr) {
+    alert(excepErr);
+  }
+}
+  </script>
+</body>
+</html>
