@@ -11,11 +11,11 @@ This is the relay-based Legacy Devices client. You can use this on devices that 
 
 4. Run the `main.py` file.
 
-5. Run an HTTP server, you can do this easily by running `python3 -m http.server`.
+5. Run an HTTP server, you can do this easily by running `python3 -m http.server 5000`.
 
 6. Open the `index.html` file, and modify the `ip` and `port` variables to their respective values.
 
-7. Open the HTTP server in your device's web browser. The URL should look something like `http://192.168.1.71:8000/`.
+7. Open the HTTP server in your device's web browser. The URL should look something like `http://192.168.1.71:5000/`.
 
 ## Checklist
 This client is **36%** complete as per the Meower Everywhere Feature Checklist (not including non-feasible features)
