@@ -16,11 +16,12 @@ body {
   <h2>Meower</h2>
   <small id='smalver'>If you're seeing this message, your device might not support/allow JavaScript!</small><br>
   <button onclick='document.getElementById("test").innerHTML = "<small></small>"'>Clear</button> <button onclick='checkqueue()'>Fetch</button> <button onclick='toggletheme()'>Change Theme</button><br><br>
+  <input type='text' id='uname'> <button onclick='setuname()'>Set name!</button> <span id='cuname'>Current username: tester</span><br>
   <input type='text' id='post'> <button onclick='post()'>Post!</button>
   <p id='test'><small></small></p>
   <script type="text/javascript">
 const meowerapi = "https://api.meower.org/"
-const vers = "v1.0.0-api"
+const vers = "v1.0.1-api"
 var uname = "tester"
 document.getElementById("smalver").innerHTML = vers + "<br>No fetched incoming"
 
@@ -31,6 +32,12 @@ function post() { // NOTE: use webhooks here
   xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
   xhttp.send(JSON.stringify({"post": compit, "username": uname}));
   document.getElementById("post").value = ""
+}
+
+function setuname() {
+  uname = document.getElementById("uname").value;
+  document.getElementById("cuname").innerText = "Current username: " + uname;
+  document.getElementById("uname").value = "";
 }
 
 function checkqueue() { // NOTE: replace with api home fetch
