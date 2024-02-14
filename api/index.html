@@ -16,29 +16,41 @@ body {
   <h2>Meower</h2>
   <small id='smalver'>If you're seeing this message, something's messed up.</small><br>
   <button onclick='document.getElementById("test").innerHTML = "<small></small>"'>Clear</button> <button onclick='checkqueue()'>Fetch</button> <button onclick='toggletheme()'>Change Theme</button><br><br>
-  <input type='text' id='uname'> <button onclick='setuname()'>Set name!</button> <span id='cuname'>Current username: tester</span><br>
-  <input type='text' id='post'> <button onclick='post()'>Post!</button><br>
-  <small>The posting feature uses mPost, a service made and hosted by melt. mPost will collect and store your IP address, username, and message content for moderation purposes. Your access to mPost may be terminated at any time for any reason with or without notice. If you do not want this information collected, do not use the posting feature.</small>
+  <div id="authandpost"><input type='text' id='unameinput'><br><input type='password' id='pswdinput'><br><span id="loginbtn"><button onclick='meltauth()'>Log in</button></span><br><small>Authentication to Meower is done using meltAuth. <a href="https://meltauth.meltland.dev/privacy">View the meltAuth Privacy Information here.</a></small></div>
   <p id='test'><small></small></p>
+  <!--<input type='text' id='post'> <button onclick='post()'>Post!</button>-->
   <script type="text/javascript">
 const meowerapi = "https://api.meower.org/"
-const vers = "v1.0.1-api"
-var uname = "tester"
+const vers = "v1.0.2-api"
+var token = "tester"
 document.getElementById("smalver").innerHTML = vers + "<br>No fetched incoming"
 
-function post() { // NOTE: use webhooks here
+function meltauth() {
+  document.getElementById("loginbtn").innerHTML = "<button>...</button>"
   var xhttp = new XMLHttpRequest();
-  var compit = document.getElementById("post").value
-  xhttp.open("POST", "https://mpost.meltland.dev/home");
+//  xhttp.open("POST", "https://meltauth.meltland.dev/login");
+  xhttp.open("POST", "http://0.0.0.0:3001/login");
   xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhttp.send(JSON.stringify({"post": compit, "username": uname}));
-  document.getElementById("post").value = ""
+  xhttp.send(JSON.stringify({"username": document.getElementById("unameinput").value, "pswd": document.getElementById("pswdinput").value}));
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var resp = JSON.parse(xhttp.responseText);
+      token = resp.payload.payload.token;
+      document.getElementById("authandpost").innerHTML = "<input type='text' id='post'> <button onclick='post()'>Post!</button>"
+    } else if (this.readyState == 4 && this.status != 200) {
+      document.getElementById("loginbtn").innerHTML = "<button onclick='meltauth()'>Log in</button>"
+    }
+  }
 }
 
-function setuname() {
-  uname = document.getElementById("uname").value;
-  document.getElementById("cuname").innerText = "Current username: " + uname;
-  document.getElementById("uname").value = "";
+function post() { // NOTE: DONT use webhooks here ;)
+  var xhttp = new XMLHttpRequest();
+  var compit = document.getElementById("post").value
+  xhttp.open("POST", "https://api.meower.org/home");
+  xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  xhttp.setRequestHeader("token", token);
+  xhttp.send(JSON.stringify({"content": compit}));
+  document.getElementById("post").value = ""
 }
 
 function checkqueue() { // NOTE: replace with api home fetch
