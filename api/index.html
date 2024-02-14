@@ -21,7 +21,7 @@ body {
   <!--<input type='text' id='post'> <button onclick='post()'>Post!</button>-->
   <script type="text/javascript">
 const meowerapi = "https://api.meower.org/"
-const vers = "v1.0.2-api"
+const vers = "v1.1.1-api"
 var token = "tester"
 document.getElementById("smalver").innerHTML = vers + "<br>No fetched incoming"
 
@@ -29,7 +29,7 @@ function meltauth() {
   document.getElementById("loginbtn").innerHTML = "<button>...</button>"
   var xhttp = new XMLHttpRequest();
 //  xhttp.open("POST", "https://meltauth.meltland.dev/login");
-  xhttp.open("POST", "http://0.0.0.0:3001/login");
+  xhttp.open("POST", "https://meltauth.meltland.dev/login");
   xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
   xhttp.send(JSON.stringify({"username": document.getElementById("unameinput").value, "pswd": document.getElementById("pswdinput").value}));
   xhttp.onreadystatechange = function() {
